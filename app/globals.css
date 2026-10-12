@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Airtable design system, light + dark.
+   Light  = the documented marketing palette: white canvas, near-black ink + CTA, hairline #ddd.
+   Dark   = derived from the same palette: the doc's dark navy #181d26 becomes the canvas and the
+            primary CTA inverts to white (the doc's "white button over dark surfaces").
+   Voltage comes from full-bleed signature cards (dark / forest / coral / cream), never from small accents. */
+:root {
+  --canvas: 255 255 255;        /* #ffffff */
+  --panel: 255 255 255;
+  --sunken: 248 250 252;        /* surface-soft #f8fafc */
+  --strong: 224 226 230;        /* surface-strong #e0e2e6 */
+  --line: 221 221 221;          /* hairline #dddddd */
+  --ink: 24 29 38;              /* #181d26 */
+  --body: 51 56 64;             /* #333840 */
+  --mute: 90 96 107;            /* a touch lighter than doc muted (#41454d) so captions sit below body text */
+  --faint: 146 151 160;         /* border-strong #9297a0 */
+  --primary: 24 29 38;          /* primary CTA */
+  --onprimary: 255 255 255;
+  --link: 27 97 201;            /* #1b61c9 */
+  --infoborder: 69 143 255;     /* #458fff */
+  --ok: 0 100 0;               --okbg: 232 244 233;
+  --warn: 122 84 8;            --warnbg: 245 233 212;   /* cream #f5e9d4 */
+  --bad: 170 45 0;             --badbg: 252 237 231;    /* coral #aa2d00 */
+  --infobg: 234 241 252;
+  --sigdark: 24 29 38;
+  --sigforest: 10 46 14;
+  --sigcoral: 170 45 0;
+  --sigcream: 245 233 212;
+}
+.dark {
+  --canvas: 24 29 38;           /* surface-dark #181d26 */
+  --panel: 30 36 47;
+  --sunken: 20 24 32;
+  --strong: 45 52 64;
+  --line: 47 54 66;
+  --ink: 244 245 247;
+  --body: 201 205 212;
+  --mute: 146 151 160;          /* border-strong */
+  --faint: 104 110 122;
+  --primary: 255 255 255;
+  --onprimary: 24 29 38;
+  --link: 110 161 240;
+  --infoborder: 69 143 255;
+  --ok: 57 191 69;             --okbg: 15 40 22;        /* success-border #39bf45 */
+  --warn: 244 211 94;          --warnbg: 48 40 16;      /* yellow #f4d35e */
+  --bad: 255 143 107;          --badbg: 56 26 16;
+  --infobg: 20 36 62;
+  --sigdark: 11 14 19;
+  --sigforest: 10 46 14;
+  --sigcoral: 170 45 0;
+  --sigcream: 245 233 212;
+}
+
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
+
+body {
+  @apply bg-canvas text-body font-sans antialiased;
+  font-size: 14px;          /* body-md */
+  line-height: 1.45;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+h1, h2, h3, h4 { @apply text-ink; }
+code { @apply text-[12px] px-1 py-0.5 rounded-sm bg-sunken text-ink; }
+::selection { background: rgb(var(--infoborder) / 0.28); }
+button, summary, select, label { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+
+@layer components {
+  /* surfaces: color-block first, hairline second, shadow never */
+  .card { @apply bg-panel border border-line rounded-md p-6; }
+  .well { @apply bg-sunken rounded-md p-4; }
+
+  /* signature cards: full-bleed brand surfaces (rounded.lg) */
+  .sig { @apply rounded-lg p-6 text-white; }
+  .sig-dark { @apply sig bg-sigdark; }
+  .sig-forest { @apply sig bg-sigforest; }
+  .sig-coral { @apply sig bg-sigcoral; }
+  .sig-cream { @apply rounded-lg p-6 bg-sigcream text-[#181d26]; }
+  .sig-strong { @apply rounded-lg p-6 bg-strong text-ink; }
+
+  /* type: weights stay 400 / 500, emphasis comes from size and contrast */
+  .page-title { @apply text-[32px] leading-[1.2] font-normal text-ink; }
+  .page-desc { @apply text-mute mt-2 max-w-2xl text-[14px]; }
+  .section-title { @apply text-[20px] leading-[1.35] font-normal text-ink; }
+  .label { @apply block text-[13px] font-medium mb-1.5 text-ink; }
+  .hint { @apply text-[12.5px] text-mute; }
+
+  /* buttons: near-black primary + white hairline secondary, 12px radius. Default and pressed states only. */
+  .btn { @apply inline-flex items-center justify-center gap-2 h-10 px-4 rounded-lg text-[14px] font-medium border border-line bg-canvas text-ink transition-colors active:bg-sunken focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-infoborder disabled:text-faint disabled:border-faint/50 disabled:bg-canvas; }
+  .btn-primary { @apply bg-primary border-primary text-onprimary active:opacity-85 disabled:bg-primary/30 disabled:border-transparent disabled:text-onprimary/70; }
+  .btn-danger { @apply text-bad; }
+  .btn-ghost { @apply border-transparent bg-transparent text-mute; }
+  .input { @apply w-full h-11 px-4 rounded-sm text-[14px] bg-canvas text-ink border border-line placeholder:text-faint focus:outline-none focus:border-infoborder focus:ring-1 focus:ring-infoborder; }
+  :where(textarea).input { @apply h-auto py-3; }
+  :where(select).input { @apply pr-8; }
+  .input[type='file'] { @apply h-auto p-2 text-mute file:mr-3 file:cursor-pointer file:rounded-sm file:border file:border-line file:bg-sunken file:px-3 file:py-1.5 file:text-[13px] file:font-medium file:text-ink; }
+
+  /* segmented filter */
+  .seg { @apply inline-flex flex-wrap gap-1 p-1 rounded-lg bg-sunken border border-line; }
+  .seg-item { @apply px-3 h-8 rounded-md text-[13px] font-medium text-mute transition-colors; }
+  .seg-item-on { @apply bg-primary text-onprimary; }
+
+  /* chips + status (success green, coral for problems, cream for warnings) */
+  .chip { @apply inline-flex items-center px-2 h-[22px] rounded-sm text-[12px] font-medium bg-sunken text-body border border-line; }
+  .chip-accent { @apply bg-infobg text-link border-transparent; }
+  .chip-ok { @apply bg-okbg text-ok border-transparent; }
+  .chip-warn { @apply bg-warnbg text-warn border-transparent; }
+  .chip-bad { @apply bg-badbg text-bad border-transparent; }
+
+  .notice { @apply text-[13px] rounded-md px-4 py-3; }
+  .notice-ok { @apply bg-okbg text-ok; }
+  .notice-bad { @apply bg-badbg text-bad; }
+  .notice-warn { @apply bg-warnbg text-warn; }
+  .notice-info { @apply bg-infobg text-link; }
+  .notice-idle { @apply bg-sunken text-ink; }
+
+  .step-num { @apply inline-grid place-items-center w-6 h-6 mr-2.5 rounded-full bg-primary text-onprimary text-[12px] font-medium align-[2px]; }
+  .divider { @apply border-line; }
+}
+
+/* white button on a signature (dark / forest / coral) surface - stays white in both themes */
+@layer components {
+  .btn-on-dark { @apply bg-white border-white text-[#181d26] active:bg-white/85; }
+}

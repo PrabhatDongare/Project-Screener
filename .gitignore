@@ -1,0 +1,10 @@
+node_modules/
+.next/
+
+# Secrets and personal data - never commit
+.env
+.env.*
+!.env.example
+user-data/
+data/
+*.log
